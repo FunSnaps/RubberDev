@@ -1,0 +1,22 @@
+.stack-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.stack-item {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0;
+  border: 2px solid #000;
+  border-radius: 12px;
+  background: #fffbe6;
+  font-weight: 700;
+  box-shadow: 2px 2px 0 #000;
+  transition: transform 0.15s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05) rotate(-1deg);
+    background: #fff3c4;
+  }
+}

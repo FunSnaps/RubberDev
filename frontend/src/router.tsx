@@ -1,10 +1,10 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import HomePage from './components/pages/HomePage';
 import CharacterPage from './components/pages/CharacterPage';
+import ProfilePage from './components/pages/ProfilePage.tsx';
 
 const router = createBrowserRouter([
-  { path: '/', element: <HomePage /> },
-  { path: '/characters', element: <CharacterPage /> },
+  { path: '/', element: <ProfilePage /> },
+  { path: '/game', element: <CharacterPage /> },
 ]);
 
 export default function AppRouter() {
