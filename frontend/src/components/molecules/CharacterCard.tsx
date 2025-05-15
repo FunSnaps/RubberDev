@@ -1,12 +1,14 @@
-import type { CartoonCharacter } from '../../features/characters/character.types';
+import type { Character } from '../../features/characters/character.types';
 import Text from '../atoms/Text.tsx';
 import Image from '../atoms/Image';
+import { useCollectionStore } from '../../stores/collectionStore.ts';
 
 type Props = {
-  character: CartoonCharacter;
+  character: Character;
 };
 
 export default function CharacterCard({ character }: Props) {
+  const add = useCollectionStore((state) => state.add);
   return (
     <div className="character-card">
       <Image src={character.imageUrl} alt={character.name} />
@@ -14,6 +16,7 @@ export default function CharacterCard({ character }: Props) {
       <Text>Origin: {character.origin}</Text>
       <Text>Abilities: {character.abilities}</Text>
       <Text>Rarity: {character.rarity}</Text>
+      <button onClick={() => add(character)}>Collect</button>
     </div>
   );
 }

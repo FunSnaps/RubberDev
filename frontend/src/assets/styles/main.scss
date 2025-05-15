@@ -1,8 +1,20 @@
+//  Base
 @use 'base/base';
-@use './base/animations';
+@use 'base/animations';
 
-@use './components/pages/profile';
-@use './components/molecules/profile/hero';
-@use './components/molecules/profile/stack-grid';
-@use './components/molecules/profile/project-intro';
-@use './components/molecules/profile/contact';
+//  Organisms
+@use 'components/organisms/header';
+
+//  Molecules — Profile
+@use 'components/molecules/profile/hero';
+@use 'components/molecules/profile/stack-grid';
+@use 'components/molecules/profile/project-intro';
+@use 'components/molecules/profile/contact';
+
+//  Molecules — Game
+@use 'components/molecules/game/character-card';
+@use 'components/molecules/game/filter-controls';
+
+//  Pages
+@use 'components/pages/profile';
+@use 'components/pages/game';

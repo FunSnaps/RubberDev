@@ -1,0 +1,13 @@
+.site-header {
+  padding: 1rem;
+  background: #fff;
+  border-bottom: 3px solid #000;
+  nav {
+    display: flex;
+    gap: 1.5rem;
+    a {
+      text-decoration: none;
+      &.active { font-weight: 700; }
+    }
+  }
+}
