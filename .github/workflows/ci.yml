@@ -54,4 +54,6 @@ jobs:
 
       - name: Run tests
         working-directory: backend
-        run: dotnet test --no-build --configuration Release --logger "trx;LogFileName=test_results.xml"
+        env:
+          VSTEST_CONNECTION_TIMEOUT: 300
+        run: |
