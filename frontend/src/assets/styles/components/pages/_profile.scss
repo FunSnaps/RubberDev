@@ -10,8 +10,12 @@
     padding: 2rem;
     box-shadow: 4px 4px 0 #000;
     transition: transform 0.2s ease;
-    &:hover { animation: rubberBounce 0.6s ease; }
-    + .section-card { margin-top: 2rem; }
+    &:hover {
+      animation: rubberBounce 0.6s ease;
+    }
+    + .section-card {
+      margin-top: 2rem;
+    }
   }
 
   .two-column {

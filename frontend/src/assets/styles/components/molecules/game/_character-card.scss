@@ -6,7 +6,9 @@
   text-align: center;
   box-shadow: 4px 4px 0 #000;
   transition: transform 0.2s ease;
-  &:hover { transform: scale(1.05) translateY(-4px); }
+  &:hover {
+    transform: scale(1.05) translateY(-4px);
+  }
   img {
     width: 100%;
     height: auto;
@@ -21,6 +23,8 @@
     border-radius: 8px;
     background: #fff8e1;
     cursor: pointer;
-    &:hover { background: #fff3c4; }
+    &:hover {
+      background: #fff3c4;
+    }
   }
 }
