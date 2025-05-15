@@ -39,10 +39,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup .NET 6.x
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '9.0.x'
 
       - name: Restore packages
         working-directory: backend
@@ -57,3 +57,4 @@ jobs:
         env:
           VSTEST_CONNECTION_TIMEOUT: 300
         run: |
+          dotnet test --no-build --configuration Release --verbosity normal
