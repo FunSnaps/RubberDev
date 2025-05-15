@@ -1,0 +1,14 @@
+.game-page {
+  padding: 2rem;
+  .character-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+
+    .my-collection {
+      margin-top: 2rem;
+      h2 { margin-bottom: 1rem; }
+    }
+  }
+}

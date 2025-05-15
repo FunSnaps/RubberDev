@@ -1,4 +1,4 @@
-export interface CartoonCharacter {
+export interface Character {
   id: string;
   name: string;
   origin: string;
