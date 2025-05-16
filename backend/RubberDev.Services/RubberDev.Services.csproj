@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RubberDev.Brokers\RubberDev.Brokers.csproj" />
+    <ProjectReference Include="..\RubberDev.Models\RubberDev.Models.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -2,73 +2,73 @@
 using Dapper;
 using RubberDev.Models;
 using RubberDev.Brokers;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace RubberDev.Infrastructure;
-
-public class StorageBroker : IStorageBroker
+namespace RubberDev.Infrastructure
 {
-    private readonly IConfiguration configuration;
-    private readonly string connectionString;
-
-    public StorageBroker(IConfiguration configuration)
+    public class StorageBroker : IStorageBroker
     {
-        this.configuration = configuration;
-        this.connectionString = configuration.GetConnectionString("DefaultConnection");
-    }
+        private readonly IConfiguration configuration;
+        private readonly string connectionString;
 
-    public async ValueTask<CartoonCharacter> InsertCartoonCharacterAsync(CartoonCharacter character)
-    {
-        using IDbConnection db = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
+        public StorageBroker(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+            this.connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
 
-        string sql = @"
-            INSERT INTO CartoonCharacters 
-            (Id, Name, Origin, Abilities, Rarity, ImageUrl)
-            VALUES 
-            (@Id, @Name, @Origin, @Abilities, @Rarity, @ImageUrl)";
+        public async ValueTask<CartoonCharacter> InsertCartoonCharacterAsync(CartoonCharacter character)
+        {
+            using IDbConnection db = new SqlConnection(connectionString);
 
-        await db.ExecuteAsync(sql, character);
-        return character;
-    }
+            string sql = @"
+                INSERT INTO CartoonCharacters 
+                (Id, Name, Origin, Abilities, Rarity, ImageUrl)
+                VALUES 
+                (@Id, @Name, @Origin, @Abilities, @Rarity, @ImageUrl)";
 
-    public IQueryable<CartoonCharacter> SelectAllCartoonCharacters()
-    {
-        using IDbConnection db = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
-        string sql = "SELECT * FROM CartoonCharacters";
-        return db.Query<CartoonCharacter>(sql).AsQueryable();
-    }
+            await db.ExecuteAsync(sql, character);
+            return character;
+        }
 
-    public async ValueTask<CartoonCharacter> SelectCartoonCharacterByIdAsync(Guid characterId)
-    {
-        using IDbConnection db = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
-        string sql = "SELECT * FROM CartoonCharacters WHERE Id = @Id";
-        return await db.QueryFirstOrDefaultAsync<CartoonCharacter>(sql, new { Id = characterId });
-    }
+        public IQueryable<CartoonCharacter> SelectAllCartoonCharacters()
+        {
+            using IDbConnection db = new SqlConnection(connectionString);
+            string sql = "SELECT * FROM CartoonCharacters";
+            return db.Query<CartoonCharacter>(sql).AsQueryable();
+        }
 
-    public async ValueTask<CartoonCharacter> UpdateCartoonCharacterAsync(CartoonCharacter character)
-    {
-        using IDbConnection db = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
+        public async ValueTask<CartoonCharacter> SelectCartoonCharacterByIdAsync(Guid characterId)
+        {
+            using IDbConnection db = new SqlConnection(connectionString);
+            string sql = "SELECT * FROM CartoonCharacters WHERE Id = @Id";
+            return await db.QueryFirstOrDefaultAsync<CartoonCharacter>(sql, new { Id = characterId });
+        }
 
-        string sql = @"
-            UPDATE CartoonCharacters SET
-            Name = @Name,
-            Origin = @Origin,
-            Abilities = @Abilities,
-            Rarity = @Rarity,
-            ImageUrl = @ImageUrl
-            WHERE Id = @Id";
+        public async ValueTask<CartoonCharacter> UpdateCartoonCharacterAsync(CartoonCharacter character)
+        {
+            using IDbConnection db = new SqlConnection(connectionString);
 
-        await db.ExecuteAsync(sql, character);
-        return character;
-    }
+            string sql = @"
+                UPDATE CartoonCharacters 
+                SET Name = @Name,
+                    Origin = @Origin,
+                    Abilities = @Abilities,
+                    Rarity = @Rarity,
+                    ImageUrl = @ImageUrl
+                WHERE Id = @Id";
 
-    public async ValueTask<CartoonCharacter> DeleteCartoonCharacterAsync(Guid characterId)
-    {
-        using IDbConnection db = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
-        string sql = "DELETE FROM CartoonCharacters WHERE Id = @Id";
-        await db.ExecuteAsync(sql, new { Id = characterId });
+            await db.ExecuteAsync(sql, character);
+            return character;
+        }
 
-        // Optional: return null or stub-deleted character
-        return null!;
+        public async ValueTask<CartoonCharacter> DeleteCartoonCharacterAsync(Guid characterId)
+        {
+            using IDbConnection db = new SqlConnection(connectionString);
+            string sql = "DELETE FROM CartoonCharacters WHERE Id = @Id";
+            await db.ExecuteAsync(sql, new { Id = characterId });
+            return null!;
+        }
     }
 }

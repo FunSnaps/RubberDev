@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RubberDev.Brokers;
 using RubberDev.Models;
+using RubberDev.Brokers;
 
 namespace RubberDev.Api.Controllers;
 
@@ -10,31 +10,51 @@ public class CartoonCharactersController : ControllerBase
 {
     private readonly IStorageBroker storageBroker;
 
-    public CartoonCharactersController(IStorageBroker storageBroker)
-    {
+    public CartoonCharactersController(IStorageBroker storageBroker) =>
         this.storageBroker = storageBroker;
-    }
-
-    [HttpPost]
-    public async ValueTask<ActionResult<CartoonCharacter>> Post(CartoonCharacter character) =>
-        Ok(await storageBroker.InsertCartoonCharacterAsync(character));
-
+        
     [HttpGet]
-    public ActionResult<IQueryable<CartoonCharacter>> Get() =>
-        Ok(storageBroker.SelectAllCartoonCharacters());
-
-    [HttpGet("{id}")]
-    public async ValueTask<ActionResult<CartoonCharacter>> GetById(Guid id) =>
-        Ok(await storageBroker.SelectCartoonCharacterByIdAsync(id));
-
-    [HttpPut]
-    public async ValueTask<ActionResult<CartoonCharacter>> Put(CartoonCharacter character) =>
-        Ok(await storageBroker.UpdateCartoonCharacterAsync(character));
-
-    [HttpDelete("{id}")]
-    public async ValueTask<ActionResult> Delete(Guid id)
+    public IActionResult GetAll() =>
+        Ok(this.storageBroker.SelectAllCartoonCharacters());
+        
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
     {
-        await storageBroker.DeleteCartoonCharacterAsync(id);
+        var character = await this.storageBroker
+            .SelectCartoonCharacterByIdAsync(id);
+
+        if (character is null)
+            return NotFound();
+
+        return Ok(character);
+    }
+        
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CartoonCharacter character)
+    {
+        var created = await this.storageBroker
+            .InsertCartoonCharacterAsync(character);
+
+        return CreatedAtAction(nameof(GetById),
+            new { id = created.Id }, created);
+    }
+        
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] CartoonCharacter character)
+    {
+        if (id != character.Id)
+            return BadRequest("Mismatched Id");
+
+        var updated = await this.storageBroker
+            .UpdateCartoonCharacterAsync(character);
+
+        return Ok(updated);
+    }
+        
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await this.storageBroker.DeleteCartoonCharacterAsync(id);
         return NoContent();
     }
 }
