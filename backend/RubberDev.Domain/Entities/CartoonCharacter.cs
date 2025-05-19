@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RubberDev.Models;
+namespace RubberDev.Domain.Entities;
 
 public class CartoonCharacter
 {

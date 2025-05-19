@@ -1,4 +1,4 @@
-﻿using RubberDev.Brokers;
+﻿using RubberDev.Application.Interfaces;
 using RubberDev.Infrastructure;
 
 namespace RubberDev.Api.Configurations;

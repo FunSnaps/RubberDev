@@ -1,9 +1,9 @@
 ﻿using System.Data;
 using Dapper;
-using RubberDev.Models;
-using RubberDev.Brokers;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using RubberDev.Application.Interfaces;
+using RubberDev.Domain.Entities;
 
 namespace RubberDev.Infrastructure
 {

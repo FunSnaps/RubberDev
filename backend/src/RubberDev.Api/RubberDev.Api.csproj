@@ -11,9 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RubberDev.Brokers\RubberDev.Brokers.csproj" />
     <ProjectReference Include="..\RubberDev.Infrastructure\RubberDev.Infrastructure.csproj" />
-    <ProjectReference Include="..\RubberDev.Services\RubberDev.Services.csproj" />
   </ItemGroup>
 
 </Project>

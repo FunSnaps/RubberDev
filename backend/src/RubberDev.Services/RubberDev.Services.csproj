@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RubberDev.Brokers\RubberDev.Brokers.csproj" />
-    <ProjectReference Include="..\RubberDev.Models\RubberDev.Models.csproj" />
+    <Folder Include="Interfaces\" />
   </ItemGroup>
 
 </Project>

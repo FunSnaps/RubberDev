@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RubberDev.Models\RubberDev.Models.csproj" />
+    <ProjectReference Include="..\..\RubberDev.Domain\RubberDev.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
-﻿using RubberDev.Models;
+﻿using RubberDev.Domain.Entities;
 
-namespace RubberDev.Brokers;
+namespace RubberDev.Application.Interfaces;
 
 public interface IStorageBroker
 {
