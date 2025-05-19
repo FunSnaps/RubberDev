@@ -1,5 +1,5 @@
 ﻿using RubberDev.Application.Interfaces;
-using RubberDev.Infrastructure;
+using RubberDev.Infrastructure.Brokers;
 
 namespace RubberDev.Api.Configurations;
 

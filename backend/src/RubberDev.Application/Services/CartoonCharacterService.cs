@@ -7,25 +7,63 @@ public class CartoonCharacterService : ICartoonCharacterService
 {
     private readonly IStorageBroker _storageBroker;
 
-    public CartoonCharacterService(IStorageBroker storageBroker) =>
-        this._storageBroker = storageBroker;
-
-    public async ValueTask<CartoonCharacter> AddCartoonCharacterAsync(CartoonCharacter character)
+    public CartoonCharacterService(IStorageBroker storageBroker)
     {
-        // TODO: add any business validations here
-        return await this._storageBroker.InsertCartoonCharacterAsync(character);
+        _storageBroker = storageBroker;
     }
 
-    public IQueryable<CartoonCharacter> RetrieveAllCartoonCharacters() =>
-        this._storageBroker.SelectAllCartoonCharacters();
+    public async Task<CartoonCharacter> AddCartoonCharacterAsync(
+        CartoonCharacter character,
+        CancellationToken cancellationToken = default)
+    {
+        if (character is null)
+            throw new ArgumentNullException(nameof(character));
 
-    public async ValueTask<CartoonCharacter> RetrieveCartoonCharacterByIdAsync(Guid characterId) =>
-        await this._storageBroker
-            .SelectCartoonCharacterByIdAsync(characterId);
+        if (string.IsNullOrWhiteSpace(character.Name))
+            throw new ArgumentException("Name is required.", nameof(character.Name));
 
-    public async ValueTask<CartoonCharacter> ModifyCartoonCharacterAsync(CartoonCharacter character) =>
-        await this._storageBroker.UpdateCartoonCharacterAsync(character);
+        if (character.Id == Guid.Empty)
+            character.Id = Guid.NewGuid();
 
-    public async ValueTask<CartoonCharacter> RemoveCartoonCharacterAsync(Guid characterId) =>
-        await this._storageBroker.DeleteCartoonCharacterAsync(characterId);
+        return await _storageBroker
+            .InsertCartoonCharacterAsync(character, cancellationToken);
+    }
+
+    public Task<IEnumerable<CartoonCharacter>> RetrieveAllCartoonCharactersAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return _storageBroker.SelectAllCartoonCharactersAsync(cancellationToken);
+    }
+
+    public async Task<CartoonCharacter> RetrieveCartoonCharacterByIdAsync(
+        Guid characterId,
+        CancellationToken cancellationToken = default)
+    {
+        var character = await _storageBroker
+            .SelectCartoonCharacterByIdAsync(characterId, cancellationToken);
+
+        return character
+               ?? throw new KeyNotFoundException($"Character {characterId} not found.");
+    }
+
+    public async Task<CartoonCharacter> ModifyCartoonCharacterAsync(
+        CartoonCharacter character,
+        CancellationToken cancellationToken = default)
+    {
+        if (character is null)
+            throw new ArgumentNullException(nameof(character));
+
+        await RetrieveCartoonCharacterByIdAsync(character.Id, cancellationToken);
+
+        return await _storageBroker
+            .UpdateCartoonCharacterAsync(character, cancellationToken);
+    }
+
+    public async Task<bool> RemoveCartoonCharacterAsync(
+        Guid characterId,
+        CancellationToken cancellationToken = default)
+    {
+        return await _storageBroker
+            .DeleteCartoonCharacterAsync(characterId, cancellationToken);
+    }
 }

@@ -1,24 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.1.42" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.5" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Dapper" Version="2.1.42"/>
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.5"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\RubberDev.Application\RubberDev.Application.csproj" />
-    <ProjectReference Include="..\..\RubberDev.Domain\RubberDev.Domain.csproj" />
-    <ProjectReference Include="..\RubberDev.Application\RubberDev.Application.csproj" />
-    <ProjectReference Include="..\RubberDev.Domain\RubberDev.Domain.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\RubberDev.Application\RubberDev.Application.csproj"/>
+        <ProjectReference Include="..\RubberDev.Domain\RubberDev.Domain.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Configurations\" />
-  </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Configurations\"/>
+    </ItemGroup>
 </Project>
