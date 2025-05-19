@@ -46,8 +46,33 @@ This app serves two purposes:
 
 ```
 rubberdev/
-├── frontend/      # React app
-├── backend/       # .NET Clean Architecture API
+├── frontend/ # React / Vite app
+│ └── (atomic design + features)
+│
+└── src/ # back-end solution
+├── RubberDev.Api/ # Presentation (Web API)
+│ ├── Configurations/ # DI extensions for brokers & services
+│ ├── Controllers/ # API controllers
+│ ├── appsettings*.json
+│ └── Program.cs
+│
+├── RubberDev.Application/ # Application layer
+│ ├── Interfaces/ # Ports (service & broker contracts)
+│ ├── DTOs/ # Data transfer objects (if any)
+│ └── Services/ # Business logic implementations
+│
+├── RubberDev.Domain/ # Domain layer
+│ ├── Entities/ # Core models (CartoonCharacter, etc.)
+│ └── ValueObjects/ # Strong-typed value objects (optional)
+│
+├── RubberDev.Infrastructure/ # Infrastructure layer
+│ ├── Brokers/ # Persistence implementations (StorageBroker)
+│ ├── Configurations/ # DI for EF, Dapper, external services
+│ └── … # EF contexts, external adapters
+│
+└── RubberDev.Tests/ # xUnit tests
+├── Application.Tests/
+└── Infrastructure.Tests/
 ├── .gitignore
 ├── README.md
 └── Directory.Packages.props (shared NuGet versions)
