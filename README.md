@@ -45,37 +45,61 @@ This app serves two purposes:
 ## 📁 Folder Structure
 
 ```
+
 rubberdev/
-├── frontend/ # React / Vite app
-│ └── (atomic design + features)
-│
-└── src/ # back-end solution
-├── RubberDev.Api/ # Presentation (Web API)
-│ ├── Configurations/ # DI extensions for brokers & services
-│ ├── Controllers/ # API controllers
-│ ├── appsettings*.json
-│ └── Program.cs
-│
-├── RubberDev.Application/ # Application layer
-│ ├── Interfaces/ # Ports (service & broker contracts)
-│ ├── DTOs/ # Data transfer objects (if any)
-│ └── Services/ # Business logic implementations
-│
-├── RubberDev.Domain/ # Domain layer
-│ ├── Entities/ # Core models (CartoonCharacter, etc.)
-│ └── ValueObjects/ # Strong-typed value objects (optional)
-│
-├── RubberDev.Infrastructure/ # Infrastructure layer
-│ ├── Brokers/ # Persistence implementations (StorageBroker)
-│ ├── Configurations/ # DI for EF, Dapper, external services
-│ └── … # EF contexts, external adapters
-│
-└── RubberDev.Tests/ # xUnit tests
-├── Application.Tests/
-└── Infrastructure.Tests/
 ├── .gitignore
 ├── README.md
-└── Directory.Packages.props (shared NuGet versions)
+├── Directory.Packages.props
+├── frontend/                         # React + Vite app (atomic + feature-based)
+│   ├── .husky/
+│   ├── public/
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   │   ├── atoms/
+│   │   │   ├── molecules/
+│   │   │   └── pages/
+│   │   ├── features/
+│   │   ├── stores/
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   └── router.tsx
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── vite.config.ts
+└── src/                              # Back-end solution root
+    ├── RubberDev.Api/               # Presentation (Web API)
+    │   ├── Configurations/
+    │   │   ├── BrokerConfigurations.cs
+    │   │   └── ServiceConfiguration.cs
+    │   ├── Controllers/
+    │   │   └── CartoonCharactersController.cs
+    │   ├── appsettings.json
+    │   ├── appsettings.Development.json
+    │   └── Program.cs
+    │
+    ├── RubberDev.Application/       # Application layer (use-cases)
+    │   ├── Interfaces/
+    │   │   ├── IStorageBroker.cs
+    │   │   └── ICartoonCharacterService.cs
+    │   ├── DTOs/
+    │   └── Services/
+    │       └── CartoonCharacterService.cs
+    │
+    ├── RubberDev.Domain/            # Domain layer (entities & VOs)
+    │   ├── Entities/
+    │   │   └── CartoonCharacter.cs
+    │   └── ValueObjects/
+    │
+    ├── RubberDev.Infrastructure/    # Infra layer (data, external services)
+    │   ├── Brokers/
+    │   │   └── StorageBroker.cs
+    │   └── Configurations/           # (e.g. Dapper / EF / external DI)
+    │
+    └── RubberDev.Tests/             # xUnit tests per layer
+        ├── Application.Tests/
+        └── Infrastructure.Tests/
+
 ```
 
 ---
