@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\RubberDev.Domain\RubberDev.Domain.csproj" />
+        <ProjectReference Include="..\RubberDev.Domain\RubberDev.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="DTOs\" />
+        <Folder Include="DTOs\"/>
     </ItemGroup>
 
 </Project>

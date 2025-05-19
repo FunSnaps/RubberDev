@@ -8,53 +8,75 @@ namespace RubberDev.Api.Controllers;
 [Route("api/[controller]")]
 public class CartoonCharactersController : ControllerBase
 {
-    private readonly IStorageBroker storageBroker;
+    private readonly ICartoonCharacterService _service;
 
-    public CartoonCharactersController(IStorageBroker storageBroker) =>
-        this.storageBroker = storageBroker;
-        
+    public CartoonCharactersController(ICartoonCharacterService service)
+    {
+        _service = service;
+    }
+
     [HttpGet]
-    public IActionResult GetAll() =>
-        Ok(this.storageBroker.SelectAllCartoonCharacters());
-        
+    public async Task<ActionResult<IEnumerable<CartoonCharacter>>> GetAllAsync(
+        CancellationToken cancellationToken)
+    {
+        return Ok(await _service
+            .RetrieveAllCartoonCharactersAsync(cancellationToken));
+    }
+
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<ActionResult<CartoonCharacter>> GetByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken)
     {
-        var character = await this.storageBroker
-            .SelectCartoonCharacterByIdAsync(id);
-
-        if (character is null)
+        try
+        {
+            var character = await _service
+                .RetrieveCartoonCharacterByIdAsync(id, cancellationToken);
+            return Ok(character);
+        }
+        catch (KeyNotFoundException)
+        {
             return NotFound();
-
-        return Ok(character);
+        }
     }
-        
+
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CartoonCharacter character)
+    public async Task<ActionResult<CartoonCharacter>> CreateAsync(
+        [FromBody] CartoonCharacter character,
+        CancellationToken cancellationToken)
     {
-        var created = await this.storageBroker
-            .InsertCartoonCharacterAsync(character);
+        var created = await _service
+            .AddCartoonCharacterAsync(character, cancellationToken);
 
-        return CreatedAtAction(nameof(GetById),
-            new { id = created.Id }, created);
+        return CreatedAtAction(
+            nameof(GetByIdAsync),
+            new { id = created.Id },
+            created);
     }
-        
+
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] CartoonCharacter character)
+    public async Task<ActionResult<CartoonCharacter>> UpdateAsync(
+        Guid id,
+        [FromBody] CartoonCharacter character,
+        CancellationToken cancellationToken)
     {
         if (id != character.Id)
             return BadRequest("Mismatched Id");
 
-        var updated = await this.storageBroker
-            .UpdateCartoonCharacterAsync(character);
+        var updated = await _service
+            .ModifyCartoonCharacterAsync(character, cancellationToken);
 
         return Ok(updated);
     }
-        
+
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> DeleteAsync(
+        Guid id,
+        CancellationToken cancellationToken)
     {
-        await this.storageBroker.DeleteCartoonCharacterAsync(id);
-        return NoContent();
+        var removed = await _service
+            .RemoveCartoonCharacterAsync(id, cancellationToken);
+
+        return removed ? NoContent() : NotFound();
     }
 }

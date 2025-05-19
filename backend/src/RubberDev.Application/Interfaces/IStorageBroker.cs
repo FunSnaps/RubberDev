@@ -4,9 +4,22 @@ namespace RubberDev.Application.Interfaces;
 
 public interface IStorageBroker
 {
-    ValueTask<CartoonCharacter> InsertCartoonCharacterAsync(CartoonCharacter character);
-    IQueryable<CartoonCharacter> SelectAllCartoonCharacters();
-    ValueTask<CartoonCharacter> SelectCartoonCharacterByIdAsync(Guid characterId);
-    ValueTask<CartoonCharacter> UpdateCartoonCharacterAsync(CartoonCharacter character);
-    ValueTask<CartoonCharacter> DeleteCartoonCharacterAsync(Guid characterId);
+    Task<CartoonCharacter> InsertCartoonCharacterAsync(
+        CartoonCharacter character,
+        CancellationToken cancellationToken = default);
+
+    Task<IEnumerable<CartoonCharacter>> SelectAllCartoonCharactersAsync(
+        CancellationToken cancellationToken = default);
+
+    Task<CartoonCharacter?> SelectCartoonCharacterByIdAsync(
+        Guid characterId,
+        CancellationToken cancellationToken = default);
+
+    Task<CartoonCharacter> UpdateCartoonCharacterAsync(
+        CartoonCharacter character,
+        CancellationToken cancellationToken = default);
+
+    Task<bool> DeleteCartoonCharacterAsync(
+        Guid characterId,
+        CancellationToken cancellationToken = default);
 }

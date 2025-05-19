@@ -5,70 +5,111 @@ using Microsoft.Extensions.Configuration;
 using RubberDev.Application.Interfaces;
 using RubberDev.Domain.Entities;
 
-namespace RubberDev.Infrastructure
+namespace RubberDev.Infrastructure.Brokers;
+
+public class StorageBroker : IStorageBroker
 {
-    public class StorageBroker : IStorageBroker
+    private readonly string _connectionString;
+
+    public StorageBroker(IConfiguration configuration)
     {
-        private readonly IConfiguration configuration;
-        private readonly string connectionString;
+        _connectionString = configuration
+                               .GetConnectionString("DefaultConnection")
+                           ?? throw new InvalidOperationException("Missing DefaultConnection");
+    }
 
-        public StorageBroker(IConfiguration configuration)
-        {
-            this.configuration = configuration;
-            this.connectionString = configuration.GetConnectionString("DefaultConnection");
-        }
+    public async Task<CartoonCharacter> InsertCartoonCharacterAsync(
+        CartoonCharacter character,
+        CancellationToken cancellationToken = default)
+    {
+        const string sql = @"
+                INSERT INTO CartoonCharacters
+                  (Id, Name, Origin, Abilities, Rarity, ImageUrl)
+                VALUES
+                  (@Id, @Name, @Origin, @Abilities, @Rarity, @ImageUrl);";
 
-        public async ValueTask<CartoonCharacter> InsertCartoonCharacterAsync(CartoonCharacter character)
-        {
-            using IDbConnection db = new SqlConnection(connectionString);
+        using var db = CreateDbConnection();
+        await db.ExecuteAsync(
+                new CommandDefinition(
+                    sql,
+                    character,
+                    cancellationToken: cancellationToken))
+            .ConfigureAwait(false);
 
-            string sql = @"
-                INSERT INTO CartoonCharacters 
-                (Id, Name, Origin, Abilities, Rarity, ImageUrl)
-                VALUES 
-                (@Id, @Name, @Origin, @Abilities, @Rarity, @ImageUrl)";
+        return character;
+    }
 
-            await db.ExecuteAsync(sql, character);
-            return character;
-        }
+    public async Task<IEnumerable<CartoonCharacter>> SelectAllCartoonCharactersAsync(
+        CancellationToken cancellationToken = default)
+    {
+        const string sql = "SELECT * FROM CartoonCharacters;";
 
-        public IQueryable<CartoonCharacter> SelectAllCartoonCharacters()
-        {
-            using IDbConnection db = new SqlConnection(connectionString);
-            string sql = "SELECT * FROM CartoonCharacters";
-            return db.Query<CartoonCharacter>(sql).AsQueryable();
-        }
+        using var db = CreateDbConnection();
+        return await db.QueryAsync<CartoonCharacter>(
+                new CommandDefinition(
+                    sql,
+                    cancellationToken: cancellationToken))
+            .ConfigureAwait(false);
+    }
 
-        public async ValueTask<CartoonCharacter> SelectCartoonCharacterByIdAsync(Guid characterId)
-        {
-            using IDbConnection db = new SqlConnection(connectionString);
-            string sql = "SELECT * FROM CartoonCharacters WHERE Id = @Id";
-            return await db.QueryFirstOrDefaultAsync<CartoonCharacter>(sql, new { Id = characterId });
-        }
+    public async Task<CartoonCharacter?> SelectCartoonCharacterByIdAsync(
+        Guid characterId,
+        CancellationToken cancellationToken = default)
+    {
+        const string sql = "SELECT * FROM CartoonCharacters WHERE Id = @Id;";
 
-        public async ValueTask<CartoonCharacter> UpdateCartoonCharacterAsync(CartoonCharacter character)
-        {
-            using IDbConnection db = new SqlConnection(connectionString);
+        using var db = CreateDbConnection();
+        return await db.QueryFirstOrDefaultAsync<CartoonCharacter>(
+                new CommandDefinition(
+                    sql,
+                    new { Id = characterId },
+                    cancellationToken: cancellationToken))
+            .ConfigureAwait(false);
+    }
 
-            string sql = @"
-                UPDATE CartoonCharacters 
-                SET Name = @Name,
-                    Origin = @Origin,
-                    Abilities = @Abilities,
-                    Rarity = @Rarity,
-                    ImageUrl = @ImageUrl
-                WHERE Id = @Id";
+    public async Task<CartoonCharacter> UpdateCartoonCharacterAsync(
+        CartoonCharacter character,
+        CancellationToken cancellationToken = default)
+    {
+        const string sql = @"
+                UPDATE CartoonCharacters
+                   SET Name      = @Name,
+                       Origin    = @Origin,
+                       Abilities = @Abilities,
+                       Rarity    = @Rarity,
+                       ImageUrl  = @ImageUrl
+                 WHERE Id = @Id;";
 
-            await db.ExecuteAsync(sql, character);
-            return character;
-        }
+        using var db = CreateDbConnection();
+        await db.ExecuteAsync(
+                new CommandDefinition(
+                    sql,
+                    character,
+                    cancellationToken: cancellationToken))
+            .ConfigureAwait(false);
 
-        public async ValueTask<CartoonCharacter> DeleteCartoonCharacterAsync(Guid characterId)
-        {
-            using IDbConnection db = new SqlConnection(connectionString);
-            string sql = "DELETE FROM CartoonCharacters WHERE Id = @Id";
-            await db.ExecuteAsync(sql, new { Id = characterId });
-            return null!;
-        }
+        return character;
+    }
+
+    public async Task<bool> DeleteCartoonCharacterAsync(
+        Guid characterId,
+        CancellationToken cancellationToken = default)
+    {
+        const string sql = "DELETE FROM CartoonCharacters WHERE Id = @Id;";
+
+        using var db = CreateDbConnection();
+        var affected = await db.ExecuteAsync(
+                new CommandDefinition(
+                    sql,
+                    new { Id = characterId },
+                    cancellationToken: cancellationToken))
+            .ConfigureAwait(false);
+
+        return affected > 0;
+    }
+
+    private IDbConnection CreateDbConnection()
+    {
+        return new SqlConnection(_connectionString);
     }
 }
