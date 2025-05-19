@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RubberDev.Models;
-using RubberDev.Brokers;
+using RubberDev.Application.Interfaces;
+using RubberDev.Domain.Entities;
 
 namespace RubberDev.Api.Controllers;
 

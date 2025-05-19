@@ -1,5 +1,5 @@
-﻿using RubberDev.Services;
-using RubberDev.Services.Interfaces;
+﻿using RubberDev.Application.Interfaces;
+using RubberDev.Application.Services;
 
 namespace RubberDev.Api.Configurations;
 
