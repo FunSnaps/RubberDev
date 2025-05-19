@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RubberDev.Application\RubberDev.Application.csproj" />
     <ProjectReference Include="..\RubberDev.Infrastructure\RubberDev.Infrastructure.csproj" />
   </ItemGroup>
 
