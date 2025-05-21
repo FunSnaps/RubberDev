@@ -1,119 +1,224 @@
-# 🧪 RubberDev — Fullstack Cartoon Collector App
+# 🧪 RubberDev — Fullstack Card-Collector Gacha Game + Portfolio
 
-**RubberDev** is a fullstack portfolio project built with a whimsical 1930s rubberhose cartoon aesthetic. It showcases modern software engineering practices through a complete REST API, cloud infrastructure, scalable frontend architecture, and professional tooling.
+**RubberDev** is a portfolio-worthy, fullstack card-collector gacha game built with a whimsical 1930s rubberhose cartoon aesthetic. It combines a modern React-based SPA with a Hassan Habib–style Clean Architecture back end and robust DevOps, demonstrating end-to-end software craftsmanship.
 
----
 
-## 🎯 Project Purpose
+## 🎯 Project Overview
 
-This app serves two purposes:
+1. **Gacha Game**: Collect and manage cartoon character cards via a RESTful gacha pull system.
+2. **Portfolio Showcase**: Static and dynamic pages highlighting your skills, blog posts, architecture diagrams, and a live demo of the game.
 
-1. **Main Project**: A quirky cartoon character collecting app — complete with full CRUD support, file upload (image), and MySQL persistence.
-2. **Portfolio Showcase**: Demonstrates Marcus's fullstack skills across frontend, backend, infrastructure, testing, and architectural design.
-
----
 
 ## 🧰 Tech Stack
 
-### 🖼️ Frontend
-- **React + Vite**
-- **TypeScript**
-- **SASS** (custom styling)
-- **Zustand** (state management)
-- **Formik + Yup** (forms + validation)
-- **Atomic Design** + Feature-based folder structure
-- **React Router** (SPA routing)
-- **ESLint + Prettier + Husky**
+### 🖼️ Frontend Core
 
-### ⚙️ Backend
-- **.NET 6** with **Clean Architecture** (inspired by *The Standard* by Hassan Habib)
-- **REST API** with Swagger
-- **Dapper** for lightweight data access
-- **MySQL** as the relational database
-- **StorageBroker pattern** for persistence abstraction
-- **xUnit** for testing
+* React + Vite
+* TypeScript
+* SASS (custom styling)
+* Zustand (state management)
+* Formik + Yup (forms & validation)
+* **Atomic Design** folder structure (atoms, molecules, organisms, templates, pages, features)
+* React Router (client-side routing)
+* ESLint + Prettier + Husky (linting & formatting)
 
-### ☁️ DevOps & Infrastructure
-- **Monorepo**: Single Git repo for frontend + backend
-- **Docker** (upcoming setup for local and deployment)
-- **GitHub Actions** (planned CI for test + lint)
-- **AWS S3** (file storage planned)
-- **AWS CloudWatch** (monitoring/logging planned)
+### ⭐ Frontend Additions
 
----
+* Storybook (component-driven dev)
+* Jest + React Testing Library (unit tests)
+* Cypress or Playwright (E2E tests)
+* Next.js or Remix (SSR/SSG + image optimization)
+* Tailwind CSS or Radix UI (utility-first & accessible components)
+* PWA support (offline caching, installable app)
+* Web Vitals + Sentry RUM (performance monitoring)
+* axe-core + Lighthouse CI (accessibility audits)
+* Google Analytics or Plausible (user analytics)
 
-## 📁 Folder Structure
+### ⚙️ Backend Core
 
-```
+* .NET 6 Clean Architecture “The Standard” (Hassan Habib style)
+* REST API (controllers, DTOs, middleware)
+* Dapper (lightweight data access)
+* MySQL (relational DB)
+* StorageBroker pattern (persistence abstraction)
+* xUnit (unit testing)
+* Swagger UI (interactive API docs)
 
+### 🚀 Backend Additions
+
+* MediatR (CQRS: command/query separation)
+* HotChocolate (GraphQL endpoint)
+* Redis (caching via ElastiCache)
+* ASP.NET Core Identity / IdentityServer (JWT authentication)
+* OpenTelemetry (distributed tracing)
+* Serilog → AWS CloudWatch (structured logging)
+* API Versioning & ADRs (Architecture Decision Records)
+* Rate-limiting & security headers middleware
+
+### ☁️ DevOps & Infrastructure Core
+
+* Monorepo (frontend + backend)
+* Docker + docker-compose (local orchestration)
+* GitHub Actions (CI: lint & tests)
+* AWS S3 (card art & asset storage)
+* AWS CloudWatch (logs & metrics)
+
+### 🔧 DevOps & Infrastructure Additions
+
+* Terraform or AWS CDK (IaC) + tflint / OPA policies
+* AWS CloudFront CDN (static asset delivery)
+* Full CI/CD pipeline (lint → test → build → push → deploy to ECR → ECS/EKS)
+* CloudWatch Alarms → Slack / PagerDuty alerts
+* Dependabot / Snyk / GitHub Advanced Security (vulnerability scanning)
+* k6 or JMeter (load & performance testing)
+
+### 🌐 Cross-Cutting & Future Directions
+
+* AWS SNS / SQS or Kafka (event-driven async flows)
+* Backend-for-Frontend (BFF) aggregation layer
+* i18n: react-intl or i18next (localisation)
+* Feature flags: LaunchDarkly or self-hosted
+* React Native or Flutter mobile companion
+
+## 🧙 Features
+
+* **User Management**: Signup, login, JWT authentication, protected routes.
+* **Gacha Pulls**: Spend in-game currency to randomly draw cards based on rarity tables.
+* **Inventory & Collection**: View owned cards in a searchable, filterable grid.
+* **Deck Builder**: Drag-and-drop interface to assemble custom decks from your collection.
+* **Card CRUD**: Admin interface to create, update, delete card definitions, including image uploads.
+* **Pull History & Leaderboards**: Track past pulls and global rankings with caching for performance.
+* **Portfolio Page**: Static and dynamic content—bio, architecture diagrams, tech demos, blog links, live game.
+* **Offline & Mobile**: PWA support for offline access; future mobile companion app.
+* **Analytics & Monitoring**: Web Vitals, Sentry RUM, Google Analytics, OpenTelemetry traces.
+* **Quality & Security**: Unit, integration, E2E tests; accessibility audits; rate-limiting; policy-as-code.
+
+
+## 📁 Architecture & Folder Structure
+
+```plaintext
 rubberdev/
+├── .github/                  # GitHub workflows
+│   └── workflows/
+│       ├── ci.yml
+│       └── cd.yml
+├── terraform/                # IaC modules & policies
+│   ├── modules/
+│   │   ├── s3/
+│   │   ├── rds/
+│   │   ├── elasticache/
+│   │   └── cloudfront/
+│   ├── env/
+│   │   └── prod.tfvars
+│   └── main.tf
+├── docker-compose.yml        # local orchestration
 ├── .gitignore
-├── README.md
-├── Directory.Packages.props
-├── frontend/                         # React + Vite app (atomic + feature-based)
-│   ├── .husky/
+├── frontend/                 # React + Vite app
 │   ├── public/
 │   ├── src/
 │   │   ├── assets/
 │   │   ├── components/
 │   │   │   ├── atoms/
 │   │   │   ├── molecules/
-│   │   │   └── pages/
+│   │   │   ├── organisms/
+│   │   │   └── templates/
 │   │   ├── features/
+│   │   │   ├── auth/
+│   │   │   ├── gacha/
+│   │   │   ├── collection/
+│   │   │   └── portfolio/
 │   │   ├── stores/
+│   │   ├── pages/
 │   │   ├── App.tsx
-│   │   ├── main.tsx
-│   │   └── router.tsx
-│   ├── package.json
+│   │   ├── router.tsx
+│   │   └── index.tsx
+│   ├── .storybook/
+│   ├── tests/
+│   │   ├── unit/
+│   │   └── e2e/
+│   ├── vite.config.ts
 │   ├── tsconfig.json
-│   └── vite.config.ts
-└── src/                              # Back-end solution root
-    ├── RubberDev.Api/               # Presentation (Web API)
-    │   ├── Configurations/
-    │   │   ├── BrokerConfigurations.cs
-    │   │   └── ServiceConfiguration.cs
-    │   ├── Controllers/
-    │   │   └── CartoonCharactersController.cs
-    │   ├── appsettings.json
-    │   ├── appsettings.Development.json
-    │   └── Program.cs
-    │
-    ├── RubberDev.Application/       # Application layer (use-cases)
-    │   ├── Interfaces/
-    │   │   ├── IStorageBroker.cs
-    │   │   └── ICartoonCharacterService.cs
-    │   ├── DTOs/
-    │   └── Services/
-    │       └── CartoonCharacterService.cs
-    │
-    ├── RubberDev.Domain/            # Domain layer (entities & VOs)
-    │   ├── Entities/
-    │   │   └── CartoonCharacter.cs
-    │   └── ValueObjects/
-    │
-    ├── RubberDev.Infrastructure/    # Infra layer (data, external services)
-    │   ├── Brokers/
-    │   │   └── StorageBroker.cs
-    │   └── Configurations/           # (e.g. Dapper / EF / external DI)
-    │
-    └── RubberDev.Tests/             # xUnit tests per layer
-        ├── Application.Tests/
-        └── Infrastructure.Tests/
-
+│   └── package.json
+├── src/                      # Backend solution
+│   ├── RubberDev.Api/        # Presentation layer
+│   │   ├── Controllers/
+│   │   ├── DTOs/
+│   │   ├── Middleware/
+│   │   └── Program.cs
+│   ├── RubberDev.Application/ # Use-cases & interfaces
+│   │   ├── Services/
+│   │   └── Interfaces/
+│   ├── RubberDev.Domain/     # Entities & value objects
+│   │   ├── Entities/
+│   │   ├── ValueObjects/
+│   │   └── Enums/
+│   ├── RubberDev.Infrastructure/ # Data access & external services
+│   │   ├── Data/
+│   │   ├── Caching/
+│   │   └── Identity/
+│   └── RubberDev.Tests/      # xUnit tests
+│       ├── Api.Tests/
+│       ├── Application.Tests/
+│       └── Domain.Tests/
+└── README.md                 # This file
 ```
 
----
 
-## 🧙 Features
+## 🚀 Implementation Roadmap
 
-- View, add, update, and delete cartoon characters
-- Upload images for each character (planned via AWS S3)
-- Filter by name, rarity, or origin
-- RESTful API with Swagger documentation
-- Config-driven and DI-powered architecture
-- Strict separation of concerns across layers
+**Phase 1 – Foundations**
 
----
+   * MySQL + Redis in `docker-compose`
+   * Terraform modules for S3, RDS, ElastiCache, CloudFront, IAM, CloudWatch + tflint/OPA
+
+**Phase 2 – Auth & Documentation**
+
+   * ASP.NET Core Identity / IdentityServer for JWT
+   * Swagger UI (v1) + ADRs folder
+   * Frontend: login/register (Formik + Yup), protected routes
+
+**Phase 3 – Card & Portfolio CRUD**
+
+   * Dapper mappings & seed scripts for Cards, Inventory, PullHistory, Currency
+   * CRUD REST endpoints + GraphQL schema (HotChocolate)
+   * Portfolio page: static “About me”, architecture diagrams, analytics
+
+**Phase 4 – Gacha Engine & Caching**
+
+   * GachaService (MediatR + rarity tables + RNG)
+   * Redis caching for pull rates & leaderboards
+   * Frontend: pull screen, animations, result modal, PWA caching
+
+**Phase 5 – Collection & Deck Builder**
+
+   * Collection grid with filters & deck-builder drag/drop
+   * Versioned REST endpoints & GraphQL Playground
+   * Rate-limiting & security headers
+
+**Phase 6 – Testing & Quality Gates**
+
+   * Storybook stories, Jest/RTL unit tests, Cypress/Playwright E2E
+   * axe-core & Lighthouse CI in CI
+
+**Phase 7 – Observability & Alerts**
+
+   * OpenTelemetry (frontend & backend)
+   * Sentry RUM + Web Vitals
+   * CloudWatch Alarms → Slack/PagerDuty
+
+**Phase 8 – Performance & Scaling**
+
+   * Next.js/Remix migration (SSR/SSG + image opt)
+   * CloudFront CDN & WAF
+   * k6/JMeter load tests; tune scaling
+
+**Phase 9 – Polish & Launch**
+
+   * i18n with react-intl or i18next
+   * Feature flags (LaunchDarkly)
+   * Mobile companion (React Native/Flutter)
+   * Finalize docs: ADRs, diagrams, CI badges
+
 
 ## 🚀 Setup
 
@@ -134,16 +239,12 @@ npm run dev           # frontend
 dotnet run --project RubberDev.Api   # backend
 ```
 
-> ✅ Docker and GitHub Actions support coming soon.
-
----
 
 ## 🤝 Credits
 
 Designed and developed by **Marcus Enrique Elcamel**  
-Built for showcasing fullstack engineering skills in real-world architecture.
+Built for showcasing fullstack engineering skills in real-world architecture, inspired by the golden age of cartoons and modern software craftsmanship.
 
----
 
 ## 📸 Theme Inspiration
 
