@@ -13,11 +13,14 @@ public class StorageBroker : IStorageBroker
 
     public StorageBroker(IConfiguration configuration)
     {
-        _connectionString = configuration
-                               .GetConnectionString("DefaultConnection")
-                           ?? throw new InvalidOperationException("Missing DefaultConnection");
+        _connectionString = configuration.GetConnectionString("DefaultConnection") 
+                            ?? throw new InvalidOperationException("Missing DefaultConnection");
     }
-
+    private IDbConnection CreateDbConnection()
+    {
+        return new SqlConnection(_connectionString);
+    }    
+    
     public async Task<CartoonCharacter> InsertCartoonCharacterAsync(
         CartoonCharacter character,
         CancellationToken cancellationToken = default)
@@ -108,8 +111,21 @@ public class StorageBroker : IStorageBroker
         return affected > 0;
     }
 
-    private IDbConnection CreateDbConnection()
+    public async Task InsertPullAsync(
+        Pull pull,
+        CancellationToken cancellationToken = default)
     {
-        return new SqlConnection(_connectionString);
+        const string sql = @"
+            INSERT INTO Pulls
+                (PullId, CharacterId, PulledAt)
+            VALUES
+                (@PullId, @CharacterId, @PulledAt);";
+        
+        using var db = CreateDbConnection();
+        await db.ExecuteAsync(
+            new CommandDefinition(
+                sql,
+                pull,
+                cancellationToken: cancellationToken));
     }
 }

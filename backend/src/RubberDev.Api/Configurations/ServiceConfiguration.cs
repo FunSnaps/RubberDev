@@ -8,5 +8,6 @@ public static class ServiceConfigurations
     public static void AddServices(this IServiceCollection services)
     {
         services.AddScoped<ICartoonCharacterService, CartoonCharacterService>();
+        services.AddScoped<IGachaService, GachaService>();
     }
 }
