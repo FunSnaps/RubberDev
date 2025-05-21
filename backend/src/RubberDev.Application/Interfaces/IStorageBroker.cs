@@ -22,4 +22,8 @@ public interface IStorageBroker
     Task<bool> DeleteCartoonCharacterAsync(
         Guid characterId,
         CancellationToken cancellationToken = default);
+    
+    Task InsertPullAsync(
+        Pull pull,
+        CancellationToken cancellationToken = default);
 }
