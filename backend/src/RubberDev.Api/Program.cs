@@ -1,4 +1,4 @@
-using RubberDev.Api.Configurations;
+using RubberDev.Infrastructure.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
