@@ -1,4 +1,4 @@
-﻿using RubberDev.Application.Interfaces;
+﻿using RubberDev.Application.UseCases;
 using RubberDev.Domain.Entities;
 
 namespace RubberDev.Application.Services;

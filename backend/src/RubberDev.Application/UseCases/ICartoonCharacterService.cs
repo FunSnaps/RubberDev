@@ -1,6 +1,6 @@
 ﻿using RubberDev.Domain.Entities;
 
-namespace RubberDev.Application.Interfaces;
+namespace RubberDev.Application.UseCases;
 
 public interface ICartoonCharacterService
 {

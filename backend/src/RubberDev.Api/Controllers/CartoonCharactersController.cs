@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RubberDev.Application.Interfaces;
+using RubberDev.Application.UseCases;
 using RubberDev.Domain.Entities;
 
 namespace RubberDev.Api.Controllers;
