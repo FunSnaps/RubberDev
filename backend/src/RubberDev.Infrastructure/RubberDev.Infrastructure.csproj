@@ -8,29 +8,29 @@
 
     <ItemGroup>
         <!-- Dapper layer -->
-        <PackageReference Include="Dapper" Version="2.1.42" />
+        <PackageReference Include="Dapper" Version="2.1.42"/>
 
         <!-- EF Core + SQL Server -->
 
         <!-- Identity stores -->
 
         <!-- lower-level ADO client if you still need it -->
-        <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
         <!-- application + domain layers -->
-        <ProjectReference Include="..\RubberDev.Application\RubberDev.Application.csproj" />
-        <ProjectReference Include="..\RubberDev.Domain\RubberDev.Domain.csproj" />
+        <ProjectReference Include="..\RubberDev.Application\RubberDev.Application.csproj"/>
+        <ProjectReference Include="..\RubberDev.Domain\RubberDev.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
         <!-- reference the ASP.NET Core shared framework -->
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Data\" />
+        <Folder Include="Data\"/>
     </ItemGroup>
 
 </Project>
