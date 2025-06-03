@@ -2,6 +2,9 @@
 @use 'base/base';
 @use 'base/animations';
 
+// Atoms
+@use 'components/atoms/button';
+
 //  Organisms
 @use 'components/organisms/header';
 

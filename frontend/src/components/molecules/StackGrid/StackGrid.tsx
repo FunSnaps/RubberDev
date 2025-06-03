@@ -1,4 +1,4 @@
-import { profileData } from '../../features/profile/profile.data.ts';
+import { profileData } from '../../../features/profile/profile.data.ts';
 
 export default function StackGrid() {
   return (
