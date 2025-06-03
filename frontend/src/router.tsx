@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 
-import Header from './components/organisms/Header';
-import ProfilePage from './components/pages/ProfilePage';
-import GamePage from './components/pages/GamePage';
+import Header from './components/organisms/Header/Header.tsx';
+import ProfilePage from './components/pages/ProfilePage/ProfilePage.tsx';
+import GamePage from './components/pages/GamePage/GamePage.tsx';
 
 function AppLayout() {
   return (

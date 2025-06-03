@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import Text from '../atoms/Text';
+import Text from '../../atoms/Text/Text.tsx';
 
 export default function Header() {
   return (

@@ -1,4 +1,4 @@
-import Text from '../atoms/Text';
+import Text from '../../atoms/Text/Text.tsx';
 
 interface FilterProps {
   search: string;

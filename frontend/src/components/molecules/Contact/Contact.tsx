@@ -1,5 +1,5 @@
-import Text from '../atoms/Text';
-import { profileData } from '../../features/profile/profile.data';
+import Text from '../../atoms/Text/Text.tsx';
+import { profileData } from '../../../features/profile/profile.data.ts';
 
 export default function Contact() {
   return (

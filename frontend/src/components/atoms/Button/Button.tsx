@@ -5,6 +5,7 @@ type ButtonProps = {
   onClick?: () => void;
   className?: string;
   type?: 'button' | 'submit' | 'reset';
+  variant?: 'primary' | 'danger';
 };
 
 export default function Button({
@@ -12,9 +13,15 @@ export default function Button({
   onClick,
   className = '',
   type = 'button',
+  variant = 'primary',
 }: ButtonProps) {
+  const variantClass = variant ? `button--${variant}` : '';
   return (
-    <button onClick={onClick} className={className} type={type}>
+    <button
+      onClick={onClick}
+      className={`button ${variantClass} ${className}`}
+      type={type}
+    >
       {children}
     </button>
   );

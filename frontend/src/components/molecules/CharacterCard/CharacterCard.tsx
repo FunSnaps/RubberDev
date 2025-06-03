@@ -1,7 +1,7 @@
-import type { Character } from '../../features/characters/character.types';
-import Text from '../atoms/Text.tsx';
-import Image from '../atoms/Image';
-import { useCollectionStore } from '../../stores/collectionStore.ts';
+import type { Character } from '../../../features/characters/character.types.ts';
+import Text from '../../atoms/Text/Text.tsx';
+import Image from '../../atoms/Image/Image.tsx';
+import { useCollectionStore } from '../../../stores/collectionStore.ts';
 
 type Props = {
   character: Character;

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { getCharacters } from '../../features/characters/character.api';
-import type { Character } from '../../features/characters/character.types';
-import CharacterCard from '../molecules/CharacterCard';
-import FilterControls from '../molecules/FilterControls';
-import Text from '../atoms/Text';
-import { useCollectionStore } from '../../stores/collectionStore';
+import { getCharacters } from '../../../features/characters/character.api.ts';
+import type { Character } from '../../../features/characters/character.types.ts';
+import CharacterCard from '../../molecules/CharacterCard/CharacterCard.tsx';
+import FilterControls from '../../molecules/FilterControls/FilterControls.tsx';
+import Text from '../../atoms/Text/Text.tsx';
+import { useCollectionStore } from '../../../stores/collectionStore.ts';
 
 export default function GamePage() {
   const [characters, setCharacters] = useState<Character[]>([]);
