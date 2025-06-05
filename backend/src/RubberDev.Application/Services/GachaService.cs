@@ -20,9 +20,9 @@ public class GachaService : IGachaService
         int count,
         CancellationToken cancellationToken = default)
     {
-        if (count != 1 && count != 3)
+        if (count != 1 && count != 5)
             throw new ArgumentException(
-                "Pull count must be 1 or 3.", nameof(count));
+                "Pull count must be 1 or 5.", nameof(count));
 
         // 1) load all characters
         var allCharacters = (await _storageBroker
