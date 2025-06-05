@@ -8,7 +8,7 @@ namespace RubberDev.Application.UseCases;
 public interface IGachaService
 {
     /// <summary>
-    /// Perform a gacha pull of the specified count (1 or 3).
+    /// Perform a gacha pull of the specified count (1 or 5).
     /// </summary>
     Task<PullBatchDto> PullAsync(
         int count,
