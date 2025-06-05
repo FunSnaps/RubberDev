@@ -20,26 +20,17 @@ public class GachaService : IGachaService
         int count,
         CancellationToken cancellationToken = default)
     {
-        if (count != 1 && count != 5)
-            throw new ArgumentException(
-                "Pull count must be 1 or 5.", nameof(count));
+        ValidatePullCount(count);
 
-        // 1) load all characters
         var allCharacters = (await _storageBroker
                 .SelectAllCartoonCharactersAsync(cancellationToken))
             .ToList();
 
         if (!allCharacters.Any())
-            throw new InvalidOperationException(
-                "No characters available for pulling.");
+            throw new InvalidOperationException("No characters available for pulling.");
 
-        // 2) partition by rarity
-        var common = allCharacters.Where(c => c.Rarity <= 2).ToList();
-        var rare = allCharacters.Where(c => c.Rarity == 3).ToList();
-        var epic = allCharacters.Where(c => c.Rarity == 4).ToList();
-        var legendary = allCharacters.Where(c => c.Rarity == 5).ToList();
+        var grouped = GroupByRarity(allCharacters);
 
-        // 3) build a new batch
         var batch = new PullBatch
         {
             PullBatchId = Guid.NewGuid(),
@@ -48,21 +39,9 @@ public class GachaService : IGachaService
 
         var pulledDtos = new List<CharacterDto>();
 
-        for (var i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
-            var roll = _random.NextDouble();
-            CartoonCharacter selected;
-
-            if (roll < PullOdds.Legendary && legendary.Any())
-                selected = PickRandom(legendary);
-            else if (roll < PullOdds.Legendary + PullOdds.Epic && epic.Any())
-                selected = PickRandom(epic);
-            else if (roll < PullOdds.Legendary + PullOdds.Epic + PullOdds.Rare && rare.Any())
-                selected = PickRandom(rare);
-            else
-                selected = PickRandom(common);
-
-            // 4) record the item
+            var selected = GetCharacterByOdds(grouped);
             batch.Items.Add(new PullItem
             {
                 PullItemId = Guid.NewGuid(),
@@ -70,94 +49,86 @@ public class GachaService : IGachaService
                 CharacterId = selected.Id
             });
 
-            // 5) map to DTO
-            pulledDtos.Add(new CharacterDto(
-                selected.Id,
-                selected.Name,
-                selected.Origin,
-                selected.Abilities,
-                selected.Rarity,
-                selected.ImageUrl));
+            pulledDtos.Add(MapToDto(selected));
         }
 
-        // 6) persist entire batch
-        await _storageBroker
-            .InsertPullBatchAsync(batch, cancellationToken);
+        await _storageBroker.InsertPullBatchAsync(batch, cancellationToken);
 
-        return new PullBatchDto(
-            batch.PullBatchId,
-            batch.PulledAt,
-            pulledDtos);
+        return new PullBatchDto(batch.PullBatchId, batch.PulledAt, pulledDtos);
     }
 
     public async Task<IEnumerable<PullBatchDto>> RetrieveAllPullBatchesAsync(
         CancellationToken cancellationToken = default)
     {
-        var batches = await _storageBroker
-            .SelectAllPullBatchesAsync(cancellationToken);
+        var batches = await _storageBroker.SelectAllPullBatchesAsync(cancellationToken);
+        var characters = await _storageBroker.SelectAllCartoonCharactersAsync(cancellationToken);
+        var characterMap = characters.ToDictionary(c => c.Id);
 
-        var result = new List<PullBatchDto>();
-
-        // for each batch, load character details and project
-        foreach (var batch in batches)
+        return batches.Select(batch =>
         {
-            var characterIds = batch.Items
-                .Select(i => i.CharacterId)
+            var dtos = batch.Items
+                .Where(i => characterMap.ContainsKey(i.CharacterId))
+                .Select(i => MapToDto(characterMap[i.CharacterId]))
                 .ToList();
 
-            var characters = (await _storageBroker
-                    .SelectAllCartoonCharactersAsync(cancellationToken))
-                .Where(c => characterIds.Contains(c.Id))
-                .Select(c => new CharacterDto(
-                    c.Id, c.Name, c.Origin,
-                    c.Abilities, c.Rarity, c.ImageUrl))
-                .ToList();
-
-            result.Add(new PullBatchDto(
-                batch.PullBatchId,
-                batch.PulledAt,
-                characters));
-        }
-
-        return result;
+            return new PullBatchDto(batch.PullBatchId, batch.PulledAt, dtos);
+        });
     }
 
     public async Task<PullBatchDto?> RetrievePullBatchByIdAsync(
         Guid batchId,
         CancellationToken cancellationToken = default)
     {
-        // 1) Fetch the batch (with its items)
-        var batch = await _storageBroker
-            .SelectPullBatchByIdAsync(batchId, cancellationToken);
+        var batch = await _storageBroker.SelectPullBatchByIdAsync(batchId, cancellationToken);
+        if (batch is null) return null;
 
-        if (batch is null)
-            return null;
-
-        // 2) Load character details for each item
-        var allChars = await _storageBroker
-            .SelectAllCartoonCharactersAsync(cancellationToken);
-
-        var characterMap = allChars.ToDictionary(c => c.Id);
+        var characters = await _storageBroker.SelectAllCartoonCharactersAsync(cancellationToken);
+        var characterMap = characters.ToDictionary(c => c.Id);
 
         var pulledDtos = batch.Items
-            .Select(item =>
-            {
-                var c = characterMap[item.CharacterId];
-                return new CharacterDto(
-                    c.Id, c.Name, c.Origin,
-                    c.Abilities, c.Rarity, c.ImageUrl);
-            })
+            .Where(i => characterMap.ContainsKey(i.CharacterId))
+            .Select(i => MapToDto(characterMap[i.CharacterId]))
             .ToList();
 
-        // 3) Project into DTO
-        return new PullBatchDto(
-            batch.PullBatchId,
-            batch.PulledAt,
-            pulledDtos);
+        return new PullBatchDto(batch.PullBatchId, batch.PulledAt, pulledDtos);
     }
 
-    private static T PickRandom<T>(List<T> list)
+    // --- Private helpers ---
+
+    private void ValidatePullCount(int count)
     {
-        return list[new Random().Next(list.Count)];
+        if (count != 1 && count != 5)
+            throw new ArgumentException("Pull count must be 1 or 5.", nameof(count));
     }
+
+    private static Dictionary<string, List<CartoonCharacter>> GroupByRarity(List<CartoonCharacter> all)
+    {
+        return new Dictionary<string, List<CartoonCharacter>>
+        {
+            ["Legendary"] = all.Where(c => c.Rarity == 5).ToList(),
+            ["Epic"] = all.Where(c => c.Rarity == 4).ToList(),
+            ["Rare"] = all.Where(c => c.Rarity == 3).ToList(),
+            ["Common"] = all.Where(c => c.Rarity <= 2).ToList()
+        };
+    }
+
+    private CartoonCharacter GetCharacterByOdds(Dictionary<string, List<CartoonCharacter>> grouped)
+    {
+        double roll = _random.NextDouble();
+
+        if (roll < PullOdds.Legendary && grouped["Legendary"].Any())
+            return PickRandom(grouped["Legendary"]);
+        if (roll < PullOdds.Legendary + PullOdds.Epic && grouped["Epic"].Any())
+            return PickRandom(grouped["Epic"]);
+        if (roll < PullOdds.Legendary + PullOdds.Epic + PullOdds.Rare && grouped["Rare"].Any())
+            return PickRandom(grouped["Rare"]);
+
+        return PickRandom(grouped["Common"]);
+    }
+
+    private CartoonCharacter PickRandom(List<CartoonCharacter> list)
+        => list[_random.Next(list.Count)];
+
+    private CharacterDto MapToDto(CartoonCharacter c)
+        => new(c.Id, c.Name, c.Origin, c.Abilities, c.Rarity, c.ImageUrl);
 }

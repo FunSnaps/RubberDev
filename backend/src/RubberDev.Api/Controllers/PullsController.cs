@@ -47,10 +47,7 @@ public class PullsController : ControllerBase
         Guid batchId,
         CancellationToken cancellationToken = default)
     {
-        var batch = await _gachaService
-            .RetrieveAllPullBatchesAsync(cancellationToken)
-            .ContinueWith(t => t.Result.FirstOrDefault(b => b.PullBatchId == batchId),
-                cancellationToken);
+        var batch = await _gachaService.RetrievePullBatchByIdAsync(batchId, cancellationToken);
 
         if (batch is null)
             return NotFound();
